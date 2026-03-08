@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code — The Ultimate Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #16161f;
+    --border: rgba(255,255,255,0.07);
+    --accent: #e8673a;
+    --accent2: #6c63ff;
+    --accent3: #3ad8a4;
+    --text: #eeedf5;
+    --muted: #8a88a0;
+    --tag-bg: rgba(232,103,58,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 80px 40px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(108,99,255,0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 80% 60%, rgba(232,103,58,0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+
+  .hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(42px, 7vw, 88px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 19px;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.35s;
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.5s;
+  }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 5px 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* NAV */
+  .toc {
+    display: flex;
+    gap: 4px;
+    padding: 16px 40px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    background: rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+
+  .toc a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .toc a:hover { background: var(--surface2); color: var(--text); }
+
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-top: 80px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    border: 1px solid rgba(232,103,58,0.3);
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  /* GRID SYSTEMS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .container { padding: 0 20px 60px; }
+    .toc { padding: 12px 20px; }
+    .hero { padding: 60px 20px 40px; }
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  /* ACCENT CARD */
+  .card-accent {
+    background: linear-gradient(135deg, rgba(232,103,58,0.08), rgba(108,99,255,0.08));
+    border-color: rgba(232,103,58,0.2);
+  }
+
+  .card-green {
+    background: rgba(58,216,164,0.05);
+    border-color: rgba(58,216,164,0.2);
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #080810;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 18px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #c8e6c9;
+    overflow-x: auto;
+    margin-top: 10px;
+    tab-size: 2;
+  }
+
+  .code-block .comment { color: var(--muted); }
+  .code-block .cmd { color: var(--accent); }
+  .code-block .str { color: var(--accent3); }
+
+  /* PILL */
+  .pill {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .pill-orange { background: rgba(232,103,58,0.15); color: var(--accent); border: 1px solid rgba(232,103,58,0.3); }
+  .pill-purple { background: rgba(108,99,255,0.15); color: #9d96ff; border: 1px solid rgba(108,99,255,0.3); }
+  .pill-green  { background: rgba(58,216,164,0.15); color: var(--accent3); border: 1px solid rgba(58,216,164,0.3); }
+  .pill-red    { background: rgba(255,80,80,0.12); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.25); }
+
+  /* LIST */
+  .check-list { list-style: none; }
+  .check-list li {
+    padding: 7px 0;
+    padding-left: 22px;
+    position: relative;
+    font-size: 15px;
+    color: #c0bdd4;
+    border-bottom: 1px solid var(--border);
+  }
+  .check-list li:last-child { border-bottom: none; }
+  .check-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* WORKFLOW STEPS */
+  .workflow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .workflow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .workflow-step:last-child { border-bottom: none; }
+
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .step-content h4 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .step-content p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* CMD TABLE */
+  .cmd-table { width: 100%; border-collapse: collapse; }
+  .cmd-table th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+  }
+
+  .cmd-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+
+  .cmd-table tr:last-child td { border-bottom: none; }
+
+  .cmd-table td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent3);
+    white-space: nowrap;
+  }
+
+  .cmd-table td:last-child { color: var(--muted); font-size: 12px; }
+
+  /* LAYER CARDS */
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .layer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 20px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .layer:hover { border-left-color: var(--accent); }
+  .layer-l1 { border-left-color: var(--accent); }
+  .layer-l2 { border-left-color: var(--accent2); }
+  .layer-l3 { border-left-color: var(--accent3); }
+  .layer-l4 { border-left-color: #f5c842; }
+
+  .layer-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    width: 32px;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .layer-l1 .layer-badge { color: var(--accent); }
+  .layer-l2 .layer-badge { color: var(--accent2); }
+  .layer-l3 .layer-badge { color: var(--accent3); }
+  .layer-l4 .layer-badge { color: #f5c842; }
+
+  .layer-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 120px;
+  }
+
+  .layer-desc { font-size: 13px; color: var(--muted); }
+
+  /* DO/DONT */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  @media (max-width: 700px) { .do-dont { grid-template-columns: 1fr; } }
+
+  .do-card {
+    background: rgba(58,216,164,0.04);
+    border: 1px solid rgba(58,216,164,0.2);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .dont-card {
+    background: rgba(255,80,80,0.04);
+    border: 1px solid rgba(255,80,80,0.18);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .do-card h4 { color: var(--accent3); font-family: 'Outfit', sans-serif; margin-bottom: 14px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .dont-card h4 { color: #ff6b6b; font-family: 'Outfit', sans-serif; margin-bottom: 14px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .do-card li, .dont-card li {
+    list-style: none;
+    font-size: 13px;
+    padding: 5px 0;
+    padding-left: 18px;
+    position: relative;
+    color: #c0bdd4;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .do-card li:last-child, .dont-card li:last-child { border-bottom: none; }
+  .do-card li::before { content: '✓'; position: absolute; left: 0; color: var(--accent3); font-size: 11px; }
+  .dont-card li::before { content: '✕'; position: absolute; left: 0; color: #ff6b6b; font-size: 11px; }
+
+  /* MCP GRID */
+  .mcp-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .mcp-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .mcp-tag:hover { border-color: var(--accent2); color: var(--text); background: rgba(108,99,255,0.08); }
+
+  /* USE CASE NUMBERS */
+  .use-cases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+  @media (max-width: 900px) { .use-cases { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .use-cases { grid-template-columns: 1fr; } }
+
+  .use-case {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .use-case:hover { border-color: rgba(108,99,255,0.4); transform: translateY(-2px); }
+
+  .use-case-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: rgba(108,99,255,0.25);
+    line-height: 1;
+    min-width: 30px;
+  }
+
+  .use-case h4 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .use-case p { font-size: 12px; color: var(--muted); }
+
+  /* MEMORY HIERARCHY */
+  .memory-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mem-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+
+  .mem-item::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    bottom: -1px;
+    width: 3px;
+    border-radius: 8px 0 0 8px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .mem-path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent3);
+    min-width: 200px;
+  }
+
+  .mem-desc { font-size: 13px; color: var(--muted); }
+
+  /* PROMPTING TABLE */
+  .prompt-table { width: 100%; border-collapse: collapse; }
+  .prompt-table th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    padding: 8px 16px;
+    border-bottom: 2px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .prompt-table td {
+    padding: 12px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+
+  .prompt-table tr:last-child td { border-bottom: none; }
+  .prompt-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .prompt-table td:nth-child(2) { color: var(--muted); }
+  .prompt-table td:nth-child(3) { color: var(--accent3); font-size: 12px; font-style: italic; }
+
+  /* DIVIDER */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    margin: 80px 0 0;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer span { color: var(--accent); }
+
+  /* KEYFRAMES */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INLINE HIGHLIGHTS */
+  .hl { color: var(--accent); font-weight: 600; }
+  .hl-green { color: var(--accent3); }
+  .hl-purple { color: #9d96ff; }
+
+  /* KEY RULE BOX */
+  .key-rule {
+    background: linear-gradient(135deg, rgba(232,103,58,0.1), rgba(108,99,255,0.08));
+    border: 1px solid rgba(232,103,58,0.3);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 16px;
+  }
+
+  .key-rule-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .key-rule p {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  /* PRICING TABLE */
+  .pricing { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  @media (max-width: 900px) { .pricing { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .pricing { grid-template-columns: 1fr; } }
+
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .price-card.featured {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(232,103,58,0.08), transparent);
+  }
+
+  .price-plan { font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .price-amount { font-family: 'JetBrains Mono', monospace; font-size: 22px; color: var(--accent); margin-bottom: 4px; }
+  .price-limit { font-size: 11px; color: var(--muted); margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; }
+  .price-desc { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-eyebrow">Anthropic · 2026 Edition</div>
+  <h1>Claude <span>Code</span><br>The Ultimate Guide</h1>
+  <p class="hero-sub">Everything you need to go from beginner to power user — in one page.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">Getting Started</span>
+    <span class="hero-tag">CLAUDE.md</span>
+    <span class="hero-tag">Skills</span>
+    <span class="hero-tag">Hooks</span>
+    <span class="hero-tag">MCP</span>
+    <span class="hero-tag">Workflows</span>
+    <span class="hero-tag">Commands</span>
+    <span class="hero-tag">Prompting</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#what">What Is It</a>
+  <a href="#start">Getting Started</a>
+  <a href="#workflow">Workflow</a>
+  <a href="#claude-md">CLAUDE.md</a>
+  <a href="#memory">Memory Hierarchy</a>
+  <a href="#skills">Skills</a>
+  <a href="#hooks">Hooks</a>
+  <a href="#mcp">MCP</a>
+  <a href="#commands">Commands</a>
+  <a href="#prompting">Prompting</a>
+  <a href="#use-cases">Use Cases</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#do-dont">Do & Don't</a>
+  <a href="#pricing">Pricing</a>
+</nav>
+
+<main class="container">
+
+  <!-- WHAT IS IT -->
+  <section class="section" id="what">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">What Is Claude Code?</h2>
+    </div>
+    <div class="grid-2">
+      <div class="card card-accent">
+        <div class="card-title">The Simple Explanation</div>
+        <p style="font-size:15px; margin-bottom:14px;">Claude Code is a <span class="hl">command-line tool</span> built by Anthropic that lives inside your terminal and works across your entire workflow. It reads, writes, creates, and organizes files on your computer.</p>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">No upload limits. No session expiry. No copy-pasting back and forth.</p>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:13px;"><span style="font-size:16px;">💬</span> <span style="color:var(--muted)"><b style="color:var(--text)">ChatGPT</b> = asking someone for help</span></div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:13px;"><span style="font-size:16px;">⚡</span> <span style="color:var(--muted)"><b style="color:var(--accent)">Claude Code</b> = a capable teammate who actually does the work</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Chat → Operating System</div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,80,80,0.06); border-radius:6px; border:1px solid rgba(255,80,80,0.15);">
+            <span style="font-size:13px; color:var(--muted);">Without Claude Code</span>
+            <div style="display:flex; flex-direction:column; gap:3px; font-family:'JetBrains Mono',monospace; font-size:10px; color:#ff6b6b; text-align:right;">
+              <span>Chat window only</span>
+              <span>Upload limits</span>
+              <span>Sessions expire</span>
+              <span>You do everything</span>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(58,216,164,0.06); border-radius:6px; border:1px solid rgba(58,216,164,0.2);">
+            <span style="font-size:13px; color:var(--muted);">With Claude Code</span>
+            <div style="display:flex; flex-direction:column; gap:3px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent3); text-align:right;">
+              <span>Full system access</span>
+              <span>All files, any size</span>
+              <span>Hours-long tasks</span>
+              <span>AI teammates</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GETTING STARTED -->
+  <div class="section-divider"></div>
+  <section class="section" id="start">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Getting Started</h2>
+    </div>
+    <div class="card" style="margin-bottom:24px; padding:0; overflow:hidden;">
+      <div style="padding:16px 20px 12px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border);">
+        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ff4444;"></span>
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.05em;">How I Start Every Claude Code Project</span>
+      </div>
+      <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/aQvpqlSiUIQ?si=CQZ4OFoAsAcWNA5e" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"></iframe>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">Requirements</div>
+          <ul class="check-list">
+            <li>Node.js 18 or higher</li>
+            <li>macOS 13+, Ubuntu 20+, or Windows 10+ (WSL/Git Bash)</li>
+            <li>Claude Pro ($20/mo), Max ($100–200/mo), or API credits</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">Installation</div>
+          <div class="code-block">
+<span class="comment"># Mac / Linux</span>
+<span class="cmd">curl</span> -fsSL https://claude.ai/install.sh | bash
+
+<span class="comment"># Windows (PowerShell)</span>
+<span class="cmd">irm</span> https://claude.ai/install.ps1 | iex
+
+<span class="comment"># Then navigate to your project</span>
+<span class="cmd">cd</span> ~/your-project-folder
+<span class="cmd">claude</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">First Session Checklist</div>
+        <div class="workflow">
+          <div class="workflow-step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Run <code style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent3);">/init</code></h4>
+              <p>Scans your codebase and generates a starter CLAUDE.md memory file</p>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Review the generated CLAUDE.md</h4>
+              <p>Add your tech stack, commands, and architecture notes</p>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Enter Plan Mode (Shift+Tab twice)</h4>
+              <p>Describe your goal — let Claude map out the steps before doing anything</p>
+            </div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Switch to Auto-Accept</h4>
+              <p>Once the plan looks right, hit Shift+Tab → Auto Accept and let it run</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPTIMAL WORKFLOW -->
+  <div class="section-divider"></div>
+  <section class="section" id="workflow">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">The Optimal Workflow</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">Daily Pattern</div>
+          <div class="code-block">
+cd project && claude
+Shift + Tab + Tab    <span class="comment">→ Plan Mode</span>
+Describe feature intent
+Shift + Tab          <span class="comment">→ Auto Accept</span>
+/compact             <span class="comment">→ Save context tokens</span>
+Esc Esc              <span class="comment">→ /rewind if needed</span>
+Commit frequently    <span class="comment">→ New session per feature</span>
+          </div>
+        </div>
+        <div class="key-rule">
+          <div class="key-rule-label">Key Rule</div>
+          <p>A good plan is everything. The better your brief, the fewer revisions you'll need. <span class="hl">Never skip plan mode.</span></p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Step-by-Step Flow</div>
+        <div class="workflow">
+          <div class="workflow-step">
+            <div class="step-num">1</div>
+            <div class="step-content"><h4>Start in Plan Mode</h4><p>Shift+Tab twice to activate</p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">2</div>
+            <div class="step-content"><h4>Write your goal clearly</h4><p>Be specific. More context = better output</p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">3</div>
+            <div class="step-content"><h4>Let Claude break it into steps</h4><p>Review and iterate the plan before executing</p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">4</div>
+            <div class="step-content"><h4>Switch to Auto-Accept Edits</h4><p>Claude executes the plan end-to-end</p></div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-num">5</div>
+            <div class="step-content"><h4>Review output → Refine</h4><p>Commit frequently. Start a new session per feature</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLAUDE.MD -->
+  <div class="section-divider"></div>
+  <section class="section" id="claude-md">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">CLAUDE.md — Project Memory</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="card card-accent" style="margin-bottom:16px;">
+          <div class="card-title">What Goes In It</div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+            <span class="pill pill-orange">Tech Stack</span>
+            <span class="pill pill-orange">Directory Map</span>
+            <span class="pill pill-orange">Architecture</span>
+            <span class="pill pill-purple">Build / Test / Lint</span>
+            <span class="pill pill-purple">Purpose of Each Module</span>
+            <span class="pill pill-green">Workflows</span>
+            <span class="pill pill-green">Gotchas</span>
+          </div>
+          <ul class="check-list">
+            <li>Keep each file under 200 lines</li>
+            <li>Subfolder files append context — never overwrite parent</li>
+            <li>Reference files with @filename syntax</li>
+            <li>Commit to Git for team sharing</li>
+            <li>Add workflow rules and best practices</li>
+          </ul>
+        </div>
+        <div class="card card-green">
+          <div class="card-title">CLAUDE.md Best Practices</div>
+          <ul class="check-list">
+            <li>Run /init first then refine output</li>
+            <li>Be specific in instructions</li>
+            <li>Add gotchas Claude cannot infer</li>
+            <li>Keep memory concise — quality over quantity</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Example CLAUDE.md</div>
+        <div class="code-block" style="font-size:11px;">
+<span class="comment"># Project: MyApp</span>
+FastAPI REST API + React SPA + Postgres
+
+<span class="comment">## Key Commands</span>
+npm run dev
+npm run test
+npm run lint
+
+<span class="comment">## Architecture</span>
+/app   → Next.js App Router pages
+/lib   → shared utilities
+/prisma → DB schema &amp; migrations
+
+<span class="comment">## Style Guide</span>
+- Follow existing patterns
+- No inline styles in components
+
+<span class="comment">## Important Context</span>
+Main data source: /data/analytics.db
+Deploy target: Vercel
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMORY HIERARCHY -->
+  <div class="section-divider"></div>
+  <section class="section" id="memory">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Memory File Hierarchy</h2>
+    </div>
+    <div class="memory-stack">
+      <div class="mem-item">
+        <span class="mem-path">~/.claude/CLAUDE.md</span>
+        <span class="mem-desc">Global — applies to all projects on this machine</span>
+        <span class="pill pill-orange" style="margin-left:auto">Global</span>
+      </div>
+      <div class="mem-item">
+        <span class="mem-path">~/CLAUDE.md</span>
+        <span class="mem-desc">Parent — monorepo root context</span>
+        <span class="pill pill-purple" style="margin-left:auto">Monorepo</span>
+      </div>
+      <div class="mem-item">
+        <span class="mem-path">./CLAUDE.md</span>
+        <span class="mem-desc">Project — shared on Git with your team</span>
+        <span class="pill pill-green" style="margin-left:auto">Shared</span>
+      </div>
+      <div class="mem-item">
+        <span class="mem-path">./frontend/CLAUDE.md</span>
+        <span class="mem-desc">Subfolder — scoped context for specific packages or modules</span>
+        <span class="pill pill-purple" style="margin-left:auto">Scoped</span>
+      </div>
+    </div>
+    <div class="key-rule" style="margin-top:16px;">
+      <div class="key-rule-label">Rule</div>
+      <p>Subfolder files <span class="hl">append</span> context — they never overwrite parent CLAUDE.md files. Layer your knowledge strategically.</p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <div class="section-divider"></div>
+  <section class="section" id="skills">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Skills — The Superpower</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">What Are Skills?</div>
+          <p style="font-size:14px; color:var(--muted); margin-bottom:14px;">Skills are markdown guide files that Claude <span class="hl">auto-invokes via natural language</span>. They're reusable instruction packages that activate when relevant — no manual prompting needed.</p>
+          <div style="display:flex; gap:10px; flex-direction:column;">
+            <div style="padding:12px 14px; background:var(--surface2); border-radius:8px; border:1px solid var(--border);">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent3); margin-bottom:4px;">PROJECT SKILL</div>
+              <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text);">.claude/skills/&lt;name&gt;/SKILL.md</code>
+              <p style="font-size:12px; color:var(--muted); margin-top:4px;">Shared with the project via Git</p>
+            </div>
+            <div style="padding:12px 14px; background:var(--surface2); border-radius:8px; border:1px solid var(--border);">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--accent2); margin-bottom:4px;">PERSONAL SKILL</div>
+              <code style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--text);">~/.claude/skills/&lt;name&gt;/SKILL.md</code>
+              <p style="font-size:12px; color:var(--muted); margin-top:4px;">Personal, global across all projects</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Skill Ideas</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;">
+            <span class="mcp-tag">code-review</span>
+            <span class="mcp-tag">testing-patterns</span>
+            <span class="mcp-tag">commit-messages</span>
+            <span class="mcp-tag">docker-deploy</span>
+            <span class="mcp-tag">codebase-visualizer</span>
+            <span class="mcp-tag">api-design</span>
+            <span class="mcp-tag">linkedin-writer</span>
+            <span class="mcp-tag">prd-generator</span>
+            <span class="mcp-tag">data-cleaner</span>
+            <span class="mcp-tag">security-reviewer</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Example Skill File</div>
+        <div class="code-block" style="font-size:11px;">
+<span class="comment">---</span>
+name: testing-patterns
+description: Jest testing patterns for this project.
+  Auto-activates for test-related tasks.
+allowed tools: Read, Grep, Glob
+<span class="comment">---</span>
+
+<span class="comment"># Testing Patterns</span>
+Use describe + it + AAA pattern:
+- Arrange: set up test data
+- Act: call the function
+- Assert: check the result
+
+Use factory mocks for external deps.
+Never use real network calls in unit tests.
+
+<span class="comment">## Examples</span>
+See /tests/examples/ for patterns.
+        </div>
+        <div class="key-rule" style="margin-top:14px;">
+          <div class="key-rule-label">Critical</div>
+          <p>The <span class="hl">description field</span> is what triggers auto-activation. Write it like a search query — it determines when Claude uses this skill.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOOKS -->
+  <div class="section-divider"></div>
+  <section class="section" id="hooks">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Hooks — Deterministic Callbacks</h2>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">Hook Types</div>
+          <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <span class="pill pill-orange">PreToolUse</span>
+            <span class="pill pill-purple">PostToolUse</span>
+            <span class="pill pill-green">Notification</span>
+          </div>
+          <ul class="check-list">
+            <li><b>PreToolUse</b> — runs before Claude uses a tool (validate, block, log)</li>
+            <li><b>PostToolUse</b> — runs after a tool completes (lint, format, notify)</li>
+            <li><b>Notification</b> — fires on specific events like task completion</li>
+          </ul>
+        </div>
+        <div class="card card-green">
+          <div class="card-title">Permissions & Safety</div>
+          <div class="code-block" style="font-size:11px;">
+"permissions": {
+  "allow": [
+    "Read",
+    "Bash(git:*)",
+    "Write(*.evd)"
+  ],
+  "deny": [
+    "Read(env*)",
+    "Bash(sudo:*)"
+  ]
+}
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Hook Configuration (.claude/settings.json)</div>
+        <div class="code-block" style="font-size:11px;">
+"hooks": {
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "scripts/security-check.sh",
+          "timeout": 5
+        }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "Write",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "npm run lint -- --fix",
+          "timeout": 10
+        }
+      ]
+    }
+  ]
+}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MCP -->
+  <div class="section-divider"></div>
+  <section class="section" id="mcp">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2 class="section-title">MCP — Connect Everything</h2>
+    </div>
+    <div class="grid-2">
+      <div class="card card-accent">
+        <div class="card-title">What Is MCP?</div>
+        <p style="font-size:14px; margin-bottom:14px;">Model Context Protocol is an open standard that connects Claude to your tools. Think of it as <span class="hl">USB-C for AI</span> — one interface for your entire tool stack. 200+ integrations, one protocol.</p>
+        <div class="code-block" style="font-size:11px;">
+<span class="comment"># Add an MCP server (e.g. Notion)</span>
+<span class="cmd">claude mcp add</span> --transport http notion \
+  https://mcp.notion.com/mcp
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Available Integrations</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Developer Tools</div>
+            <div class="mcp-tags">
+              <span class="mcp-tag">GitHub</span>
+              <span class="mcp-tag">Sentry</span>
+              <span class="mcp-tag">Linear</span>
+              <span class="mcp-tag">GitLab</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Productivity</div>
+            <div class="mcp-tags">
+              <span class="mcp-tag">Notion</span>
+              <span class="mcp-tag">Slack</span>
+              <span class="mcp-tag">Jira</span>
+              <span class="mcp-tag">Google Docs</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Data & Research</div>
+            <div class="mcp-tags">
+              <span class="mcp-tag">PostgreSQL</span>
+              <span class="mcp-tag">Perplexity</span>
+              <span class="mcp-tag">Brave Search</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Communication</div>
+            <div class="mcp-tags">
+              <span class="mcp-tag">Gmail</span>
+              <span class="mcp-tag">Typefully</span>
+              <span class="mcp-tag">Buffer</span>
+              <span class="mcp-tag">Discord</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMANDS -->
+  <div class="section-divider"></div>
+  <section class="section" id="commands">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2 class="section-title">Commands & Shortcuts</h2>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Slash Commands</div>
+        <table class="cmd-table">
+          <thead>
+            <tr><th>Command</th><th>What It Does</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>/init</td><td>Generate CLAUDE.md from your codebase</td></tr>
+            <tr><td>/doccat</td><td>Check installation &amp; connection status</td></tr>
+            <tr><td>/compact</td><td>Compress context to save tokens</td></tr>
+            <tr><td>/clear</td><td>Reset context (use between tasks)</td></tr>
+            <tr><td>/model</td><td>Switch between Opus / Sonnet / Haiku</td></tr>
+            <tr><td>/mcp</td><td>Check MCP server connections</td></tr>
+            <tr><td>/doctor</td><td>Diagnose installation issues</td></tr>
+            <tr><td>/config</td><td>Open settings panel</td></tr>
+            <tr><td>/help</td><td>Show all available commands</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">Keyboard Shortcuts</div>
+          <table class="cmd-table">
+            <thead>
+              <tr><th>Action</th><th>Keys</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Plan Mode</td><td><span class="pill pill-purple">Shift+Tab+Tab</span></td></tr>
+              <tr><td>Auto Accept</td><td><span class="pill pill-purple">Shift+Tab</span></td></tr>
+              <tr><td>Extended Thinking</td><td><span class="pill pill-orange">Tab</span></td></tr>
+              <tr><td>Cancel / Stop</td><td><span class="pill pill-red">Esc</span></td></tr>
+              <tr><td>Rewind checkpoint</td><td><span class="pill pill-red">Esc Esc</span></td></tr>
+              <tr><td>Paste image</td><td><span class="pill pill-green">Ctrl+V</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">File References</div>
+          <table class="cmd-table">
+            <thead>
+              <tr><th>Syntax</th><th>Example</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>@filename</td><td>@report.csv</td></tr>
+              <tr><td>@folder/</td><td>@data/</td></tr>
+              <tr><td>Tab key</td><td>Autocomplete paths</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMPTING -->
+  <div class="section-divider"></div>
+  <section class="section" id="prompting">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2 class="section-title">Prompting Techniques</h2>
+    </div>
+    <div class="card">
+      <table class="prompt-table">
+        <thead>
+          <tr>
+            <th>Technique</th>
+            <th>When To Use</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Be Specific</td>
+            <td>Always. Vague prompts = vague results</td>
+            <td>"Clean this CSV — remove rows where column B is empty, deduplicate on email"</td>
+          </tr>
+          <tr>
+            <td>Give Examples</td>
+            <td>When output format matters</td>
+            <td>"Show 1–2 examples of what you want"</td>
+          </tr>
+          <tr>
+            <td>Chain Steps</td>
+            <td>Complex multi-part tasks</td>
+            <td>"First analyze, then summarize, then create action items"</td>
+          </tr>
+          <tr>
+            <td>Set Constraints</td>
+            <td>Quality control</td>
+            <td>"Max 500 words" or "Only use data from 2024"</td>
+          </tr>
+          <tr>
+            <td>Assign Roles</td>
+            <td>Expertise-specific tasks</td>
+            <td>"Act as a data analyst reviewing this dataset"</td>
+          </tr>
+          <tr>
+            <td>/clear Often</td>
+            <td>Between unrelated tasks</td>
+            <td>Resets context so old info doesn't pollute new tasks</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card card-accent" style="margin-top:16px;">
+      <div class="card-title">Pro Pattern: Checkpoint + Iterate</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="workflow-step">
+          <div class="step-num" style="background:var(--accent2);">→</div>
+          <div class="step-content"><p>Ask Claude to make a plan first — review before execution</p></div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num" style="background:var(--accent2);">→</div>
+          <div class="step-content"><p>Let it create checkpoints after major milestones</p></div>
+        </div>
+        <div class="workflow-step">
+          <div class="step-num" style="background:var(--accent2);">→</div>
+          <div class="step-content"><p>Rewind (Esc twice) if something goes wrong</p></div>
+        </div>
+        <div class="workflow-step" style="border-bottom:none;">
+          <div class="step-num" style="background:var(--accent2);">→</div>
+          <div class="step-content"><p>Iterate with specific feedback until output is correct</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <div class="section-divider"></div>
+  <section class="section" id="use-cases">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2 class="section-title">6 Essential Use Cases</h2>
+    </div>
+    <div class="use-cases">
+      <div class="use-case">
+        <div class="use-case-num">01</div>
+        <div>
+          <h4>Synthesize Customer Feedback</h4>
+          <p>Drop in survey data. Get a categorised summary in seconds</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <div class="use-case-num">02</div>
+        <div>
+          <h4>Draft Documents & Presentations</h4>
+          <p>From PRDs to pitch decks — generated from your notes</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <div class="use-case-num">03</div>
+        <div>
+          <h4>Build Code & Prototypes</h4>
+          <p>Create MVPs, dashboards, and scripts without a dev team</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <div class="use-case-num">04</div>
+        <div>
+          <h4>Research & Competitive Analysis</h4>
+          <p>Summarise reports, extract insights, compare competitors</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <div class="use-case-num">05</div>
+        <div>
+          <h4>Automate Repetitive Workflows</h4>
+          <p>Recurring reports, batch file processing, data cleanup</p>
+        </div>
+      </div>
+      <div class="use-case">
+        <div class="use-case-num">06</div>
+        <div>
+          <h4>Create Reusable Skills</h4>
+          <p>Build task-specific instruction sets Claude auto-loads when relevant</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4-LAYER ARCHITECTURE -->
+  <div class="section-divider"></div>
+  <section class="section" id="architecture">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <h2 class="section-title">The 4-Layer Architecture</h2>
+    </div>
+    <div class="layers">
+      <div class="layer layer-l1">
+        <div class="layer-badge">L1</div>
+        <div class="layer-name">CLAUDE.md</div>
+        <div class="layer-desc">Persistent content and rules — the foundation of every session</div>
+        <span class="pill pill-orange" style="margin-left:auto">Memory</span>
+      </div>
+      <div class="layer layer-l2">
+        <div class="layer-badge">L2</div>
+        <div class="layer-name">Skills</div>
+        <div class="layer-desc">Auto-invoked knowledge packs — activate based on natural language context</div>
+        <span class="pill pill-purple" style="margin-left:auto">Knowledge</span>
+      </div>
+      <div class="layer layer-l3">
+        <div class="layer-badge">L3</div>
+        <div class="layer-name">Hooks</div>
+        <div class="layer-desc">Safety gates and automation — deterministic callbacks before and after tool use</div>
+        <span class="pill pill-green" style="margin-left:auto">Automation</span>
+      </div>
+      <div class="layer layer-l4">
+        <div class="layer-badge">L4</div>
+        <div class="layer-name">Agents</div>
+        <div class="layer-desc">Subagents with their own context — run in parallel, work autonomously on subtasks</div>
+        <span class="pill" style="background:rgba(245,200,66,0.12);color:#f5c842;border:1px solid rgba(245,200,66,0.3);margin-left:auto">Multi-Agent</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DO & DONT -->
+  <div class="section-divider"></div>
+  <section class="section" id="do-dont">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <h2 class="section-title">Do's & Don'ts</h2>
+    </div>
+    <div class="do-dont">
+      <div class="do-card">
+        <h4>✓ Do</h4>
+        <ul>
+          <li>Start every session in Plan Mode</li>
+          <li>Use Opus 4.6 with thinking enabled for complex tasks</li>
+          <li>Create a CLAUDE.md for every project</li>
+          <li>Build Skills for recurring tasks</li>
+          <li>Use multiple displays — keep parallel sessions visible</li>
+          <li>Share your CLAUDE.md with your team via Git</li>
+          <li>Experiment — there's no one correct workflow</li>
+          <li>Continuously evolve your setup as you learn</li>
+        </ul>
+      </div>
+      <div class="dont-card">
+        <h4>✕ Don't</h4>
+        <ul>
+          <li>Skip plan mode — you'll waste time fixing avoidable errors</li>
+          <li>Use it like a chat window — it works across your file system</li>
+          <li>Forget to use multiple displays for parallel sessions</li>
+          <li>Work in isolation — share setups with your team</li>
+          <li>Treat it as finished — continually evolve your workflow</li>
+          <li>Jump straight to execution without reviewing the plan</li>
+          <li>Forget to commit frequently — checkpoints save you</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <div class="section-divider"></div>
+  <section class="section" id="pricing">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <h2 class="section-title">Pricing Quick Reference</h2>
+    </div>
+    <div class="pricing">
+      <div class="price-card">
+        <div class="price-plan">Pro</div>
+        <div class="price-amount">$20</div>
+        <div class="price-limit">/ month · Max 5x</div>
+        <div class="price-desc">Light usage, short tasks. Best starting point</div>
+      </div>
+      <div class="price-card featured">
+        <div class="price-plan">Max 5x</div>
+        <div class="price-amount">$100</div>
+        <div class="price-limit">/ month · Max 20x</div>
+        <div class="price-desc">Daily use, larger projects. Most popular</div>
+      </div>
+      <div class="price-card">
+        <div class="price-plan">Max 20x</div>
+        <div class="price-amount">$200</div>
+        <div class="price-limit">/ month</div>
+        <div class="price-desc">Power users, heavy automation workflows</div>
+      </div>
+      <div class="price-card">
+        <div class="price-plan">API</div>
+        <div class="price-amount">Pay/use</div>
+        <div class="price-limit">No monthly cap</div>
+        <div class="price-desc">CI/CD, enterprise pipelines, custom integrations</div>
+      </div>
+    </div>
+    <div class="key-rule" style="margin-top:16px;">
+      <div class="key-rule-label">Model Tip</div>
+      <p>Use <span class="hl">Opus 4.6</span> for complex reasoning. It's bigger and slower, but requires less steering and uses tools better. Use <span class="hl-green">Sonnet</span> for fast iteration. Switch with <code style="font-family:'JetBrains Mono',monospace;font-size:12px;">/model</code>.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  Claude Code Ultimate Guide · <span>2026 Edition</span> · Zamboni LLC. All rights reserved.
+</footer>
+
+<script>
+  // Intersection Observer for section animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.querySelector(a.getAttribute('href'));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
