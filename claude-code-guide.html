@@ -4,7 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claude Code — The Ultimate Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<meta name="description" content="The complete guide to Claude Code — Anthropic's AI-powered CLI. Learn installation, workflows, slash commands, MCP servers, hooks, and advanced techniques.">
+<meta property="og:title" content="Claude Code — The Ultimate Guide">
+<meta property="og:description" content="The complete guide to Claude Code — Anthropic's AI-powered CLI. Learn installation, workflows, slash commands, MCP servers, hooks, and advanced techniques.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://claudecodeguide.com/">
+<meta property="og:image" content="https://claudecodeguide.com/screenshot.png">
+<meta property="og:site_name" content="Claude Code Guide">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Code — The Ultimate Guide">
+<meta name="twitter:description" content="The complete guide to Claude Code — Anthropic's AI-powered CLI. Learn installation, workflows, slash commands, MCP servers, hooks, and advanced techniques.">
+<meta name="twitter:image" content="https://claudecodeguide.com/screenshot.png">
+<link rel="canonical" href="https://claudecodeguide.com/">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #07070f;
@@ -12,11 +24,28 @@
     --surface2: #13131e;
     --border: rgba(255,255,255,0.09);
     --accent: #f0622a;
-    --accent2: #5a4fff;
+    --accent2: #7b74ff;
     --accent3: #2dd4a0;
     --text: #eeedf5;
     --muted: #8a88a0;
     --tag-bg: rgba(240,98,42,0.12);
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--accent);
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 1000;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 0 0 4px 0;
+    transition: top 0.2s;
+  }
+  .skip-link:focus-visible {
+    top: 0;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,6 +58,10 @@
     line-height: 1.6;
     min-height: 100vh;
   }
+
+  .h1-break { display: block; }
+
+  section[id] { scroll-margin-top: 80px; }
 
   /* HERO */
   .hero {
@@ -299,7 +332,7 @@
     font-weight: 700;
   }
 
-  .step-content h4 {
+  .step-content h3 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 15px;
     font-weight: 700;
@@ -407,8 +440,8 @@
     padding: 20px;
   }
 
-  .do-card h4 { color: var(--accent3); font-family: 'Space Grotesk', sans-serif; margin-bottom: 14px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
-  .dont-card h4 { color: #ff6b6b; font-family: 'Space Grotesk', sans-serif; margin-bottom: 14px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .do-card h3 { color: var(--accent3); font-family: 'Space Grotesk', sans-serif; margin-bottom: 14px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .dont-card h3 { color: #ff6b6b; font-family: 'Space Grotesk', sans-serif; margin-bottom: 14px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
 
   .do-card li, .dont-card li {
     list-style: none;
@@ -466,7 +499,7 @@
     min-width: 30px;
   }
 
-  .use-case h4 {
+  .use-case h3 {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 14px;
     font-weight: 700;
@@ -700,13 +733,31 @@
   @media (max-width: 420px) {
     .pricing { grid-template-columns: 1fr; }
   }
+
+  .toc a:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .fade-up { opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
 
+<a class="skip-link" href="#main">Skip to main content</a>
+
 <header class="hero">
   <div class="hero-eyebrow">Anthropic · 2026 Edition</div>
-  <h1>Claude <span>Code</span><br>The Ultimate Guide</h1>
+  <h1>Claude <span>Code</span><span class="h1-break"></span>The Ultimate Guide</h1>
   <p class="hero-sub">Everything you need to go from beginner to power user — in one page.</p>
   <div class="hero-tags">
     <span class="hero-tag">Getting Started</span>
@@ -720,7 +771,7 @@
   </div>
 </header>
 
-<nav class="toc">
+<nav class="toc" aria-label="Table of contents">
   <a href="#what">What Is It</a>
   <a href="#start">Getting Started</a>
   <a href="#workflow">Workflow</a>
@@ -737,7 +788,7 @@
   <a href="#pricing">Pricing</a>
 </nav>
 
-<main class="container">
+<main id="main" class="container">
 
   <!-- WHAT IS IT -->
   <section class="section" id="what">
@@ -747,7 +798,7 @@
     </div>
     <div class="grid-2">
       <div class="card card-accent">
-        <div class="card-title">The Simple Explanation</div>
+        <h3 class="card-title">The Simple Explanation</h3>
         <p style="font-size:15px; margin-bottom:14px;">Claude Code is a <span class="hl">command-line tool</span> built by Anthropic that lives inside your terminal and works across your entire workflow. It reads, writes, creates, and organizes files on your computer.</p>
         <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">No upload limits. No session expiry. No copy-pasting back and forth.</p>
         <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
@@ -756,7 +807,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Chat → Operating System</div>
+        <h3 class="card-title">Chat → Operating System</h3>
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
           <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,80,80,0.06); border-radius:6px; border:1px solid rgba(255,80,80,0.15);">
             <span style="font-size:13px; color:var(--muted);">Without Claude Code</span>
@@ -794,13 +845,13 @@
         <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.05em;">How I Start Every Claude Code Project</span>
       </div>
       <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/aQvpqlSiUIQ?si=CQZ4OFoAsAcWNA5e" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"></iframe>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/aQvpqlSiUIQ?si=CQZ4OFoAsAcWNA5e" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"><a href="https://www.youtube.com/watch?v=aQvpqlSiUIQ">Watch: How I Start Every Claude Code Project on YouTube</a></iframe>
       </div>
     </div>
     <div class="grid-2">
       <div>
         <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">Requirements</div>
+          <h3 class="card-title">Requirements</h3>
           <ul class="check-list">
             <li>Node.js 18 or higher</li>
             <li>macOS 13+, Ubuntu 20+, or Windows 10+ (WSL/Git Bash)</li>
@@ -808,7 +859,7 @@
           </ul>
         </div>
         <div class="card">
-          <div class="card-title">Installation</div>
+          <h3 class="card-title">Installation</h3>
           <div class="code-block">
 <span class="comment"># Mac / Linux</span>
 <span class="cmd">curl</span> -fsSL https://claude.ai/install.sh | bash
@@ -823,33 +874,33 @@
         </div>
       </div>
       <div class="card">
-        <div class="card-title">First Session Checklist</div>
+        <h3 class="card-title">First Session Checklist</h3>
         <div class="workflow">
           <div class="workflow-step">
             <div class="step-num">1</div>
             <div class="step-content">
-              <h4>Run <code style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent3);">/init</code></h4>
+              <h3>Run <code style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent3);">/init</code></h3>
               <p>Scans your codebase and generates a starter CLAUDE.md memory file</p>
             </div>
           </div>
           <div class="workflow-step">
             <div class="step-num">2</div>
             <div class="step-content">
-              <h4>Review the generated CLAUDE.md</h4>
+              <h3>Review the generated CLAUDE.md</h3>
               <p>Add your tech stack, commands, and architecture notes</p>
             </div>
           </div>
           <div class="workflow-step">
             <div class="step-num">3</div>
             <div class="step-content">
-              <h4>Enter Plan Mode (Shift+Tab twice)</h4>
+              <h3>Enter Plan Mode (Shift+Tab twice)</h3>
               <p>Describe your goal — let Claude map out the steps before doing anything</p>
             </div>
           </div>
           <div class="workflow-step">
             <div class="step-num">4</div>
             <div class="step-content">
-              <h4>Switch to Auto-Accept</h4>
+              <h3>Switch to Auto-Accept</h3>
               <p>Once the plan looks right, hit Shift+Tab → Auto Accept and let it run</p>
             </div>
           </div>
@@ -868,7 +919,7 @@
     <div class="grid-2">
       <div>
         <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">Daily Pattern</div>
+          <h3 class="card-title">Daily Pattern</h3>
           <div class="code-block">
 cd project && claude
 Shift + Tab + Tab    <span class="comment">→ Plan Mode</span>
@@ -885,27 +936,27 @@ Commit frequently    <span class="comment">→ New session per feature</span>
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Step-by-Step Flow</div>
+        <h3 class="card-title">Step-by-Step Flow</h3>
         <div class="workflow">
           <div class="workflow-step">
             <div class="step-num">1</div>
-            <div class="step-content"><h4>Start in Plan Mode</h4><p>Shift+Tab twice to activate</p></div>
+            <div class="step-content"><h3>Start in Plan Mode</h3><p>Shift+Tab twice to activate</p></div>
           </div>
           <div class="workflow-step">
             <div class="step-num">2</div>
-            <div class="step-content"><h4>Write your goal clearly</h4><p>Be specific. More context = better output</p></div>
+            <div class="step-content"><h3>Write your goal clearly</h3><p>Be specific. More context = better output</p></div>
           </div>
           <div class="workflow-step">
             <div class="step-num">3</div>
-            <div class="step-content"><h4>Let Claude break it into steps</h4><p>Review and iterate the plan before executing</p></div>
+            <div class="step-content"><h3>Let Claude break it into steps</h3><p>Review and iterate the plan before executing</p></div>
           </div>
           <div class="workflow-step">
             <div class="step-num">4</div>
-            <div class="step-content"><h4>Switch to Auto-Accept Edits</h4><p>Claude executes the plan end-to-end</p></div>
+            <div class="step-content"><h3>Switch to Auto-Accept Edits</h3><p>Claude executes the plan end-to-end</p></div>
           </div>
           <div class="workflow-step">
             <div class="step-num">5</div>
-            <div class="step-content"><h4>Review output → Refine</h4><p>Commit frequently. Start a new session per feature</p></div>
+            <div class="step-content"><h3>Review output → Refine</h3><p>Commit frequently. Start a new session per feature</p></div>
           </div>
         </div>
       </div>
@@ -922,7 +973,7 @@ Commit frequently    <span class="comment">→ New session per feature</span>
     <div class="grid-2">
       <div>
         <div class="card card-accent" style="margin-bottom:16px;">
-          <div class="card-title">What Goes In It</div>
+          <h3 class="card-title">What Goes In It</h3>
           <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
             <span class="pill pill-orange">Tech Stack</span>
             <span class="pill pill-orange">Directory Map</span>
@@ -941,7 +992,7 @@ Commit frequently    <span class="comment">→ New session per feature</span>
           </ul>
         </div>
         <div class="card card-green">
-          <div class="card-title">CLAUDE.md Best Practices</div>
+          <h3 class="card-title">CLAUDE.md Best Practices</h3>
           <ul class="check-list">
             <li>Run /init first then refine output</li>
             <li>Be specific in instructions</li>
@@ -951,7 +1002,7 @@ Commit frequently    <span class="comment">→ New session per feature</span>
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Example CLAUDE.md</div>
+        <h3 class="card-title">Example CLAUDE.md</h3>
         <div class="code-block" style="font-size:11px;">
 <span class="comment"># Project: MyApp</span>
 FastAPI REST API + React SPA + Postgres
@@ -1023,7 +1074,7 @@ Deploy target: Vercel
     <div class="grid-2">
       <div>
         <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">What Are Skills?</div>
+          <h3 class="card-title">What Are Skills?</h3>
           <p style="font-size:14px; color:var(--muted); margin-bottom:14px;">Skills are markdown guide files that Claude <span class="hl">auto-invokes via natural language</span>. They're reusable instruction packages that activate when relevant — no manual prompting needed.</p>
           <div style="display:flex; gap:10px; flex-direction:column;">
             <div style="padding:12px 14px; background:var(--surface2); border-radius:8px; border:1px solid var(--border);">
@@ -1039,7 +1090,7 @@ Deploy target: Vercel
           </div>
         </div>
         <div class="card">
-          <div class="card-title">Skill Ideas</div>
+          <h3 class="card-title">Skill Ideas</h3>
           <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;">
             <span class="mcp-tag">code-review</span>
             <span class="mcp-tag">testing-patterns</span>
@@ -1055,7 +1106,7 @@ Deploy target: Vercel
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Example Skill File</div>
+        <h3 class="card-title">Example Skill File</h3>
         <div class="code-block" style="font-size:11px;">
 <span class="comment">---</span>
 name: testing-patterns
@@ -1094,7 +1145,7 @@ See /tests/examples/ for patterns.
     <div class="grid-2">
       <div>
         <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">Hook Types</div>
+          <h3 class="card-title">Hook Types</h3>
           <div style="display:flex; gap:8px; margin-bottom:16px;">
             <span class="pill pill-orange">PreToolUse</span>
             <span class="pill pill-purple">PostToolUse</span>
@@ -1107,7 +1158,7 @@ See /tests/examples/ for patterns.
           </ul>
         </div>
         <div class="card card-green">
-          <div class="card-title">Permissions & Safety</div>
+          <h3 class="card-title">Permissions & Safety</h3>
           <div class="code-block" style="font-size:11px;">
 "permissions": {
   "allow": [
@@ -1124,7 +1175,7 @@ See /tests/examples/ for patterns.
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Hook Configuration (.claude/settings.json)</div>
+        <h3 class="card-title">Hook Configuration (.claude/settings.json)</h3>
         <div class="code-block" style="font-size:11px;">
 "hooks": {
   "PreToolUse": [
@@ -1166,7 +1217,7 @@ See /tests/examples/ for patterns.
     </div>
     <div class="grid-2">
       <div class="card card-accent">
-        <div class="card-title">What Is MCP?</div>
+        <h3 class="card-title">What Is MCP?</h3>
         <p style="font-size:14px; margin-bottom:14px;">Model Context Protocol is an open standard that connects Claude to your tools. Think of it as <span class="hl">USB-C for AI</span> — one interface for your entire tool stack. 200+ integrations, one protocol.</p>
         <div class="code-block" style="font-size:11px;">
 <span class="comment"># Add an MCP server (e.g. Notion)</span>
@@ -1175,7 +1226,7 @@ See /tests/examples/ for patterns.
         </div>
       </div>
       <div class="card">
-        <div class="card-title">Available Integrations</div>
+        <h3 class="card-title">Available Integrations</h3>
         <div style="display:flex; flex-direction:column; gap:12px;">
           <div>
             <div style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.1em;">Developer Tools</div>
@@ -1226,14 +1277,13 @@ See /tests/examples/ for patterns.
     </div>
     <div class="grid-2">
       <div class="card">
-        <div class="card-title">Slash Commands</div>
+        <h3 class="card-title">Slash Commands</h3>
         <table class="cmd-table">
           <thead>
-            <tr><th>Command</th><th>What It Does</th></tr>
+            <tr><th scope="col">Command</th><th scope="col">What It Does</th></tr>
           </thead>
           <tbody>
             <tr><td>/init</td><td>Generate CLAUDE.md from your codebase</td></tr>
-            <tr><td>/doccat</td><td>Check installation &amp; connection status</td></tr>
             <tr><td>/compact</td><td>Compress context to save tokens</td></tr>
             <tr><td>/clear</td><td>Reset context (use between tasks)</td></tr>
             <tr><td>/model</td><td>Switch between Opus / Sonnet / Haiku</td></tr>
@@ -1246,10 +1296,10 @@ See /tests/examples/ for patterns.
       </div>
       <div>
         <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">Keyboard Shortcuts</div>
+          <h3 class="card-title">Keyboard Shortcuts</h3>
           <table class="cmd-table">
             <thead>
-              <tr><th>Action</th><th>Keys</th></tr>
+              <tr><th scope="col">Action</th><th scope="col">Keys</th></tr>
             </thead>
             <tbody>
               <tr><td>Plan Mode</td><td><span class="pill pill-purple">Shift+Tab+Tab</span></td></tr>
@@ -1262,10 +1312,10 @@ See /tests/examples/ for patterns.
           </table>
         </div>
         <div class="card">
-          <div class="card-title">File References</div>
+          <h3 class="card-title">File References</h3>
           <table class="cmd-table">
             <thead>
-              <tr><th>Syntax</th><th>Example</th></tr>
+              <tr><th scope="col">Syntax</th><th scope="col">Example</th></tr>
             </thead>
             <tbody>
               <tr><td>@filename</td><td>@report.csv</td></tr>
@@ -1289,9 +1339,9 @@ See /tests/examples/ for patterns.
       <table class="prompt-table">
         <thead>
           <tr>
-            <th>Technique</th>
-            <th>When To Use</th>
-            <th>Example</th>
+            <th scope="col">Technique</th>
+            <th scope="col">When To Use</th>
+            <th scope="col">Example</th>
           </tr>
         </thead>
         <tbody>
@@ -1329,7 +1379,7 @@ See /tests/examples/ for patterns.
       </table>
     </div>
     <div class="card card-accent" style="margin-top:16px;">
-      <div class="card-title">Pro Pattern: Checkpoint + Iterate</div>
+      <h3 class="card-title">Pro Pattern: Checkpoint + Iterate</h3>
       <div style="display:flex; flex-direction:column; gap:8px;">
         <div class="workflow-step">
           <div class="step-num" style="background:var(--accent2);">→</div>
@@ -1360,44 +1410,44 @@ See /tests/examples/ for patterns.
     </div>
     <div class="use-cases">
       <div class="use-case">
-        <div class="use-case-num">01</div>
+        <div class="use-case-num" aria-hidden="true">01</div>
         <div>
-          <h4>Synthesize Customer Feedback</h4>
+          <h3>Synthesize Customer Feedback</h3>
           <p>Drop in survey data. Get a categorised summary in seconds</p>
         </div>
       </div>
       <div class="use-case">
-        <div class="use-case-num">02</div>
+        <div class="use-case-num" aria-hidden="true">02</div>
         <div>
-          <h4>Draft Documents & Presentations</h4>
+          <h3>Draft Documents & Presentations</h3>
           <p>From PRDs to pitch decks — generated from your notes</p>
         </div>
       </div>
       <div class="use-case">
-        <div class="use-case-num">03</div>
+        <div class="use-case-num" aria-hidden="true">03</div>
         <div>
-          <h4>Build Code & Prototypes</h4>
+          <h3>Build Code & Prototypes</h3>
           <p>Create MVPs, dashboards, and scripts without a dev team</p>
         </div>
       </div>
       <div class="use-case">
-        <div class="use-case-num">04</div>
+        <div class="use-case-num" aria-hidden="true">04</div>
         <div>
-          <h4>Research & Competitive Analysis</h4>
+          <h3>Research & Competitive Analysis</h3>
           <p>Summarise reports, extract insights, compare competitors</p>
         </div>
       </div>
       <div class="use-case">
-        <div class="use-case-num">05</div>
+        <div class="use-case-num" aria-hidden="true">05</div>
         <div>
-          <h4>Automate Repetitive Workflows</h4>
+          <h3>Automate Repetitive Workflows</h3>
           <p>Recurring reports, batch file processing, data cleanup</p>
         </div>
       </div>
       <div class="use-case">
-        <div class="use-case-num">06</div>
+        <div class="use-case-num" aria-hidden="true">06</div>
         <div>
-          <h4>Create Reusable Skills</h4>
+          <h3>Create Reusable Skills</h3>
           <p>Build task-specific instruction sets Claude auto-loads when relevant</p>
         </div>
       </div>
@@ -1448,7 +1498,7 @@ See /tests/examples/ for patterns.
     </div>
     <div class="do-dont">
       <div class="do-card">
-        <h4>✓ Do</h4>
+        <h3>✓ Do</h3>
         <ul>
           <li>Start every session in Plan Mode</li>
           <li>Use Opus 4.6 with thinking enabled for complex tasks</li>
@@ -1461,7 +1511,7 @@ See /tests/examples/ for patterns.
         </ul>
       </div>
       <div class="dont-card">
-        <h4>✕ Don't</h4>
+        <h3>✕ Don't</h3>
         <ul>
           <li>Skip plan mode — you'll waste time fixing avoidable errors</li>
           <li>Use it like a chat window — it works across your file system</li>
@@ -1549,19 +1599,24 @@ See /tests/examples/ for patterns.
   }, { passive: true });
 
   // Section reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) e.target.classList.add('visible');
-    });
-  }, { threshold: 0.04 });
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) {
+    document.querySelectorAll('.section').forEach(s => s.classList.add('visible'));
+  } else {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.04 });
 
-  document.querySelectorAll('.section').forEach(s => {
-    // Immediately reveal sections already in view on load
-    if (s.getBoundingClientRect().top < window.innerHeight) {
-      s.classList.add('visible');
-    }
-    observer.observe(s);
-  });
+    document.querySelectorAll('.section').forEach(s => {
+      // Immediately reveal sections already in view on load
+      if (s.getBoundingClientRect().top < window.innerHeight) {
+        s.classList.add('visible');
+      }
+      observer.observe(s);
+    });
+  }
 
   // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
